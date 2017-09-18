@@ -13,18 +13,21 @@ type Page struct {
 }
 
 //global variables
-var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
+var tmplDir = "./tpml/"
+var dataDir = "./data/"
+// global templates, read once
+var templates = template.Must(template.ParseFiles(tmplDir+"edit.html", tmplDir+"view.html"))
 var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
 
 //persistent storage
 func (p *Page) save() error {
-	filename := p.Title + ".txt"
+	filename := dataDir + p.Title + ".txt"
 	return ioutil.WriteFile(filename, p.Body, 0600)
 }
 
 //load page return error in case
 func loadPage(title string) (*Page, error) {
-	filename := title + ".txt"
+	filename := dataDir + title + ".txt"
 	body, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
